@@ -1,0 +1,2 @@
+export const PROVIDE = 'DATABASE'
+export const TASK_REPOSITORY = 'TASK_REPOSITORY'
