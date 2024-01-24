@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { ConfigModule } from '@nestjs/config'
-import { TaskModule } from './task/task.module'
+import { TaskModule } from './tasks/tasks.module'
+import { DatabaseModule } from './database/database.module'
 
 @Module({
-  imports: [ConfigModule.forRoot(), TaskModule],
+  imports: [ConfigModule.forRoot(), DatabaseModule, TaskModule],
   controllers: [AppController],
   providers: []
 })
