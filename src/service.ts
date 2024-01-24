@@ -1,6 +1,7 @@
-import { FindOptionsWhere, Repository } from 'typeorm'
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm'
 import { BaseAttributes } from './entities/BaseAttributes'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
+import { NotFoundException } from '@nestjs/common'
 
 export abstract class Service<E extends BaseAttributes> {
   constructor(private repository: Repository<E>) {}
@@ -14,7 +15,7 @@ export abstract class Service<E extends BaseAttributes> {
 
     // Valida si la data existe
     if (data === null) {
-      throw new Error(message)
+      throw new NotFoundException(message)
     }
     return data
   }
@@ -24,12 +25,12 @@ export abstract class Service<E extends BaseAttributes> {
 
     // Valida si la data existe
     if (data === null) {
-      throw new Error(message)
+      throw new NotFoundException(message)
     }
     return data
   }
 
-  async create(body: E): Promise<E> {
+  async create(body: DeepPartial<E>): Promise<DeepPartial<E> & E> {
     return this.repository.save(body)
   }
 

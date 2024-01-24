@@ -1,9 +1,16 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, HttpStatus } from '@nestjs/common'
+import { Response } from './interfaces/response.interface'
 
 @Controller()
 export class AppController {
   @Get()
-  getApp(): string {
-    return 'Welcome to To Do Core!'
+  getApp(): Response<null> {
+    return {
+      data: null,
+      message: 'Welcome to To Do Core!',
+      code: HttpStatus.OK,
+      success: true,
+      errors: []
+    }
   }
 }
