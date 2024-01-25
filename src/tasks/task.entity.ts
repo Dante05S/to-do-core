@@ -1,9 +1,17 @@
-import { Column, Entity } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 import { TaskStatus } from './enums/TaskStatus.enum'
-import { BaseAttributes } from 'src/entities/BaseAttributes'
 
 @Entity()
-export class Task extends BaseAttributes {
+export class Task {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({
     nullable: false,
     default: ''
@@ -23,4 +31,10 @@ export class Task extends BaseAttributes {
     default: TaskStatus.PENDING
   })
   status: TaskStatus
+
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
 }
