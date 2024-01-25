@@ -1,6 +1,22 @@
-import { FindOptionsWhere, Repository } from 'typeorm'
-import { BaseAttributes } from './entities/BaseAttributes'
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
+import { NotFoundException } from '@nestjs/common'
+
+import {
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
+
+abstract class BaseAttributes {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
+}
 
 export abstract class Service<E extends BaseAttributes> {
   constructor(private repository: Repository<E>) {}
@@ -14,7 +30,7 @@ export abstract class Service<E extends BaseAttributes> {
 
     // Valida si la data existe
     if (data === null) {
-      throw new Error(message)
+      throw new NotFoundException(message)
     }
     return data
   }
@@ -24,12 +40,12 @@ export abstract class Service<E extends BaseAttributes> {
 
     // Valida si la data existe
     if (data === null) {
-      throw new Error(message)
+      throw new NotFoundException(message)
     }
     return data
   }
 
-  async create(body: E): Promise<E> {
+  async create(body: DeepPartial<E>): Promise<DeepPartial<E> & E> {
     return this.repository.save(body)
   }
 
@@ -39,11 +55,11 @@ export abstract class Service<E extends BaseAttributes> {
     message: string
   ): Promise<E> {
     // Find the data
-    await this.getById(id, message)
+    const entity = await this.getById(id, message)
 
     // Update data
-    const data = await this.repository.update(id, body)
-    return data.raw
+    const data = await this.repository.save({ ...entity, ...body })
+    return data
   }
 
   async remove(id: string, message: string): Promise<void> {
