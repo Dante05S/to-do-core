@@ -1,7 +1,22 @@
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm'
-import { BaseAttributes } from './entities/BaseAttributes'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { NotFoundException } from '@nestjs/common'
+
+import {
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
+
+abstract class BaseAttributes {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
+}
 
 export abstract class Service<E extends BaseAttributes> {
   constructor(private repository: Repository<E>) {}
@@ -40,11 +55,11 @@ export abstract class Service<E extends BaseAttributes> {
     message: string
   ): Promise<E> {
     // Find the data
-    await this.getById(id, message)
+    const entity = await this.getById(id, message)
 
     // Update data
-    const data = await this.repository.update(id, body)
-    return data.raw
+    const data = await this.repository.save({ ...entity, ...body })
+    return data
   }
 
   async remove(id: string, message: string): Promise<void> {
