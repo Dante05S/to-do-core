@@ -17,32 +17,46 @@ export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @Get()
-  getAll() {
-    return this.taskService.getAll()
+  async getAll() {
+    const tasks = await this.taskService.getAll()
+    return [tasks, 'Get tasks successfully']
   }
 
   @Get(':id')
-  getById(@Param('id') id: string) {
-    return this.taskService.getById(id, 'The task does not exist')
+  async getById(@Param('id') id: string) {
+    const task = await this.taskService.getById(id, 'The task does not exist')
+    return [task, 'Get task successfully']
   }
 
   @Post()
-  create(@Body() task: CreateTaskDto) {
-    return this.taskService.create(task)
+  async create(@Body() task: CreateTaskDto) {
+    const newTask = await this.taskService.create(task)
+    return [newTask, 'Task created successfully']
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() task: CreateTaskDto) {
-    return this.taskService.update(id, task, 'The task does not exist')
+  async update(@Param('id') id: string, @Body() task: CreateTaskDto) {
+    const updateTask = await this.taskService.update(
+      id,
+      task,
+      'The task does not exist'
+    )
+    return [updateTask, 'Task updated successfully']
   }
 
   @Patch(':id')
-  updateStatus(@Param('id') id: string, @Body() task: UpdateStatusDto) {
-    return this.taskService.update(id, task, 'The task does not exist')
+  async updateStatus(@Param('id') id: string, @Body() task: UpdateStatusDto) {
+    const updateTask = await this.taskService.update(
+      id,
+      task,
+      'The task does not exist'
+    )
+    return [updateTask, 'Status updated successfully']
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.taskService.remove(id, 'The task does not exist')
+  async delete(@Param('id') id: string) {
+    await this.taskService.remove(id, 'The task does not exist')
+    return [null, 'Task deleted successfully']
   }
 }

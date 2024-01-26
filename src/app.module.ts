@@ -3,6 +3,9 @@ import { AppController } from './app.controller'
 import { ConfigModule } from '@nestjs/config'
 import { TaskModule } from './tasks/tasks.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
+import { ResponseControllerInterceptor } from './interceptors/ResponseController.interceptor'
+import { HttpExceptionsFilter } from './filters/http-exception.filter'
 
 @Module({
   imports: [
@@ -20,6 +23,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
     TaskModule
   ],
   controllers: [AppController],
-  providers: []
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionsFilter
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseControllerInterceptor
+    }
+  ]
 })
 export class AppModule {}
