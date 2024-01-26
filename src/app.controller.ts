@@ -1,5 +1,5 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common'
-import { Response } from './interfaces/response.interface'
+import { Response } from './helpers/request'
 
 @Controller()
 export class AppController {
