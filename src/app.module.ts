@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
 import { ResponseControllerInterceptor } from './interceptors/ResponseController.interceptor'
 import { HttpExceptionsFilter } from './filters/http-exception.filter'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { HttpExceptionsFilter } from './filters/http-exception.filter'
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: false
     }),
-    TaskModule
+    TaskModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [

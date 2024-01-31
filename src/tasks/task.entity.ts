@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { TaskStatus } from './enums/TaskStatus.enum'
+import { User } from '../users/user.entity'
 
 @Entity()
 export class Task {
@@ -31,6 +33,9 @@ export class Task {
     default: TaskStatus.PENDING
   })
   status: TaskStatus
+
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User
 
   @CreateDateColumn()
   created_at: Date
